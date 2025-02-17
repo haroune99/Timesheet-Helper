@@ -1,0 +1,22 @@
+{
+  "name": "timesheet-helper",
+  "version": "1.0.0",
+  "description": "An app to help me manage my time as a consultant",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/haroune99/Timesheet-Helper.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/haroune99/Timesheet-Helper/issues"
+  },
+  "homepage": "https://github.com/haroune99/Timesheet-Helper#readme",
+  "dependencies": {
+    "mongodb": "^6.13.0"
+  }
+}
