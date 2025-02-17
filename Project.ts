@@ -1,7 +1,8 @@
-const projects : Project[] = [];
+export const projects : Project[] = [];
 
 export class Project {
     constructor(
+        public id: string,
         public leader: string,
         public name: string,
         public hours: number,
@@ -13,6 +14,7 @@ export class Project {
         public team: string[],
         public PM: string
     ) {
+        this.id = id;
         this.name = name;
         this.hours = hours;
         this.startDate = startDate;
@@ -33,4 +35,5 @@ export class Project {
     }
     
 }   
+
 
