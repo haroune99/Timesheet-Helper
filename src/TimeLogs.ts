@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 const client = await connectToDatabase();
 import { Project } from "./Project";
 
-interface Timing{
+interface Timing {
     consultant: string;
     project: string;
     time: number;
@@ -13,29 +13,29 @@ interface Timing{
     year: number;
 }
 
-export async function LogFirstTiming(consultant: string){
+export async function LogFirstTiming(consultant: string) {
     const projects = await Project.getConsultantProjects(consultant);
     const currentDate = new Date();
     const currentWeek = getWeekNumber(currentDate);
     const currentYear = currentDate.getFullYear();
 
-    for (const project of projects){
-        if (!(await client.db("TimeSheet").collection("Timing").findOne({
-            consultant: consultant, 
+    for (const project of projects) {
+        const exists = await client.db("TimeSheet").collection("Timing").findOne({
+            consultant,
             project: project.name, 
-            team: {$in: [consultant]},
             weekNumber: currentWeek,
             year: currentYear
-        }))){
-            const timing: Timing = {
-                consultant: consultant,
+        });
+
+        if (!exists) {
+            await client.db("TimeSheet").collection("Timing").insertOne({
+                consultant,
                 project: project.name,
                 time: 0,
                 status: "stopped",
                 weekNumber: currentWeek,
                 year: currentYear
-            }
-            await client.db("TimeSheet").collection("Timing").insertOne(timing);
+            });
         }
     }
 }

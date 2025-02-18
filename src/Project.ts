@@ -2,14 +2,21 @@ import { connectToDatabase } from "./Database";
 import { ObjectId } from "mongodb";
 const client = await connectToDatabase();
 
-export const projects : Project[] = [];
-
 export interface Project {
+    consultant: string;
     name: string;
-    // other project fields...
+    hours: number;
+    startDate: Date;
+    endDate: Date;
+    description: string;
+    status: string;
+    progress: string;
+    team: string[];
+    PM: string;
+    _id?: string;
 }
 
-export class Project {
+export class Project implements Project {
     constructor(
         public consultant: string,
         public name: string,
@@ -22,43 +29,50 @@ export class Project {
         public team: string[],
         public PM: string,
         public _id?: string
-    ) {
-        this.name = name;
-        this.hours = hours;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.description = description;
-        this.status = status;
-        this.progress = progress;
-        this.team = team;
-        this.PM = PM;
-        this._id = _id;
-    }
+    ) {}
 
     public static async save(project: Project) {
         const { _id, ...projectData } = project;
-        await client.db("TimeSheet").collection("Timesheet").insertOne(projectData);
+        await client.db("TimeSheet").collection("Projects").insertOne(projectData);
     }
 
-    public static async getConsultantProjects(consultant: string) {
-        return await client.db("TimeSheet").collection("Timesheet")
-            .find({consultant: consultant, team: {$in: [consultant]}})
+    public static async getConsultantProjects(consultant: string): Promise<Project[]> {
+        const projects = await client.db("TimeSheet").collection<Project>("Projects")
+            .find({ 
+                consultant: consultant, 
+                team: { $in: [consultant] } 
+            })
+            .project<Project>({ // Explicit projection
+                _id: 1,
+                name: 1,
+                consultant: 1,
+                hours: 1,
+                startDate: 1,
+                endDate: 1,
+                description: 1,
+                status: 1,
+                progress: 1,
+                team: 1,
+                PM: 1
+            })
             .toArray();
+    
+        return projects.map(p => ({
+            ...p,
+            _id: (p._id as unknown as ObjectId).toString() 
+        }));
     }
 
-    public static async UpdateProject(project: Project) {
-        const { _id, ...projectWithoutId } = project;  
-        await client.db("TimeSheet").collection("Timesheet").updateOne(
-            { _id: new ObjectId(project._id) },
-            { $set: projectWithoutId }
+    public static async updateProject(id: string, updateData: Partial<Project>) {
+        await client.db("TimeSheet").collection("Projects").updateOne(
+            { _id: new ObjectId(id) },
+            { $set: updateData }
         );
     }
 
-    public static async DeleteProject(project: Project) {
-        await client.db("TimeSheet").collection("Timesheet").deleteOne({_id: new ObjectId(project._id)});
+    public static async deleteProject(id: string) {
+        await client.db("TimeSheet").collection("Projects").deleteOne(
+            { _id: new ObjectId(id) }
+        );
     }
-}   
-
-
-
-
+}
