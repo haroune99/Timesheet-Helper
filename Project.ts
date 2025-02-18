@@ -42,13 +42,18 @@ export class Project {
     }
 
     public static async UpdateProject(project: Project) {
-        const { _id, ...projectWithoutId } = project;  // Separate _id from other fields
+        const { _id, ...projectWithoutId } = project;  
         await client.db("TimeSheet").collection("Timesheet").updateOne(
             { _id: new ObjectId(project._id) },
             { $set: projectWithoutId }
         );
     }
+
+    public static async DeleteProject(project: Project) {
+        await client.db("TimeSheet").collection("Timesheet").deleteOne({_id: new ObjectId(project._id)});
+    }
 }   
+
 
 
 
