@@ -4,6 +4,11 @@ const client = await connectToDatabase();
 
 export const projects : Project[] = [];
 
+export interface Project {
+    name: string;
+    // other project fields...
+}
+
 export class Project {
     constructor(
         public consultant: string,

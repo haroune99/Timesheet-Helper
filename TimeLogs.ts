@@ -94,6 +94,19 @@ export async function LogTiming(consultant: string, project: string) {
     }
 }
 
+export async function getTimePerProjectperWeek(consultant: string, weekNumber: number, year: number){ 
+    const projectTimings = await client.db("TimeSheet").collection("Timing").find({
+        consultant: consultant,
+        weekNumber: weekNumber,
+        team: {$in: [consultant]},
+        year: year
+    }).toArray();
+    return projectTimings.map(timing => ({
+        project: timing.project,
+        time: timing.time
+    }));
+}
+
 
 // Helper function to get the week number of a date
 function getWeekNumber(date: Date): number {
