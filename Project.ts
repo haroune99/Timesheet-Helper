@@ -1,9 +1,12 @@
+import { connectToDatabase } from "./Database";
+
+const client = await connectToDatabase();
+
 export const projects : Project[] = [];
 
 export class Project {
     constructor(
-        public id: string,
-        public leader: string,
+        public consultant: string,
         public name: string,
         public hours: number,
         public startDate: Date,
@@ -14,7 +17,6 @@ export class Project {
         public team: string[],
         public PM: string
     ) {
-        this.id = id;
         this.name = name;
         this.hours = hours;
         this.startDate = startDate;
@@ -27,13 +29,14 @@ export class Project {
     }
 
     public static save(project: Project) {
-        projects.push(project);
+        client.db("TimeSheet").collection("Timesheet").insertOne(project);
     }
 
-    public static getProjects(leader: string) {
-        return projects.filter((project) => (project.leader === leader) || (project.team.includes(leader)));
+    public static getProjects(consultant: string) {
+        return client.db("TimeSheet").collection("Timesheet").find({consultant: consultant, team: {$in: [consultant]}}).toArray();
     }
-    
 }   
+
+
 
 
