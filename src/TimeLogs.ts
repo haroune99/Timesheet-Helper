@@ -1,7 +1,7 @@
 import { connectToDatabase } from "./Database";
 import { ObjectId } from "mongodb";
 const client = await connectToDatabase();
-import { Project } from "./project";
+import { Project } from "./Project";
 
 interface Timing{
     consultant: string;
