@@ -1,5 +1,5 @@
 import { connectToDatabase } from "./Database";
-
+import { ObjectId } from "mongodb";
 const client = await connectToDatabase();
 
 export const projects : Project[] = [];
@@ -15,7 +15,8 @@ export class Project {
         public status: string,
         public progress: string,
         public team: string[],
-        public PM: string
+        public PM: string,
+        public _id?: string
     ) {
         this.name = name;
         this.hours = hours;
@@ -26,17 +27,28 @@ export class Project {
         this.progress = progress;
         this.team = team;
         this.PM = PM;
+        this._id = _id;
     }
 
-    public static save(project: Project) {
-        client.db("TimeSheet").collection("Timesheet").insertOne(project);
+    public static async save(project: Project) {
+        const { _id, ...projectData } = project;
+        await client.db("TimeSheet").collection("Timesheet").insertOne(projectData);
     }
 
-    public static getProjects(consultant: string) {
-        return client.db("TimeSheet").collection("Timesheet").find({consultant: consultant, team: {$in: [consultant]}}).toArray();
+    public static async getConsultantProjects(consultant: string) {
+        return await client.db("TimeSheet").collection("Timesheet")
+            .find({consultant: consultant, team: {$in: [consultant]}})
+            .toArray();
+    }
+
+    public static async UpdateProject(project: Project) {
+        const { _id, ...projectWithoutId } = project;  // Separate _id from other fields
+        await client.db("TimeSheet").collection("Timesheet").updateOne(
+            { _id: new ObjectId(project._id) },
+            { $set: projectWithoutId }
+        );
     }
 }   
-
 
 
 
