@@ -41,6 +41,8 @@
   margin-right: auto;
   display: inline-block;  
   text-align: center;
+  margin: 10px;
+  vertical-align: top;
 }
 
 .button-container {
