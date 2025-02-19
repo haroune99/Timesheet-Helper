@@ -23,6 +23,7 @@
     "mongodb": "^6.13.0"
   },
   "devDependencies": {
+    "@types/express": "^5.0.0",
     "@types/node": "^22.13.4"
   }
 }
