@@ -1,7 +1,7 @@
 import express from "express";
 import { connectToDatabase } from "../src/Database";
 import { Project } from "../src/Project";
-import { LogFirstTiming, LogTiming, getTimePerProjectperWeek } from "../src/Timing";
+import { LogFirstTiming, LogTiming, getTimePerProjectperWeek } from "../src/TimeLogs";
 
 const app = express();
 const port = 3000;
