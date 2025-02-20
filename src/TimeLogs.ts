@@ -54,7 +54,6 @@ export async function LogTiming(consultant: string, project: string) {
     const timing = await client.db("TimeSheet").collection("Timing").findOne({
         consultant: consultant, 
         project: project, 
-        team: {$in: [consultant]},
         weekNumber: currentWeek,
         year: currentYear
     });
@@ -113,8 +112,23 @@ export async function getTimePerProjectperWeek(consultant: string, weekNumber: n
     }));
 }
 
+export async function createTiming(timing: Timing) {
+    const exists = await client.db("TimeSheet").collection("Timing").findOne({
+        consultant: timing.consultant,
+        project: timing.project,
+        weekNumber: timing.weekNumber,
+        year: timing.year
+    });
+
+    if (exists) {
+        throw new Error("Timing entry already exists for this project in the current week");
+    }
+
+    await client.db("TimeSheet").collection("Timing").insertOne(timing);
+}
+
 // Helper function to get the week number of a date
-function getWeekNumber(date: Date): number {
+export function getWeekNumber(date: Date): number {
     const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
     const dayNum = d.getUTCDay() || 7;
     d.setUTCDate(d.getUTCDate() + 4 - dayNum);

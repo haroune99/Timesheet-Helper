@@ -1,6 +1,6 @@
 import express from "express";
 import { Project } from "../src/Project";
-import { LogTiming } from "../src/TimeLogs";
+import { LogTiming, createTiming, getWeekNumber, Timing } from "../src/TimeLogs";
 
 const app = express();
 const port = 4000;
@@ -67,6 +67,25 @@ app.post("/timing/start", async (req, res) => {
         res.json({ message: "Timing updated" });
     } catch (error) {
         res.status(500).json({ error: "Timing operation failed" });
+    }
+});
+
+// Add new route for creating timing entries
+app.post("/timing", async (req, res) => {
+    try {
+        const timing: Timing = {
+            consultant: req.body.consultant,
+            project: req.body.project,
+            time: 0,
+            status: "stopped" as "stopped",
+            weekNumber: getWeekNumber(new Date()),
+            year: new Date().getFullYear()
+        };
+        
+        await createTiming(timing);
+        res.status(201).json({ message: "Timing entry created successfully" });
+    } catch (error) {
+        res.status(400).json({ error: "Invalid request" });
     }
 });
 
