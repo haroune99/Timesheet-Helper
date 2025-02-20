@@ -1,12 +1,14 @@
 import express from "express";
 import { Project } from "../src/Project";
 import { LogTiming, createTiming, getWeekNumber, Timing } from "../src/TimeLogs";
+import cors from "cors";
 
 const app = express();
 const port = 4000;
 
 // Middleware must come first!
 app.use(express.json());
+app.use(cors());
 
 app.get("/", (_, res) => {
     res.send("Hello to the TimeSheet API");
@@ -14,8 +16,9 @@ app.get("/", (_, res) => {
 
 app.get("/projects", async (req, res) => {
     try {
-        const projects = await Project.getConsultantProjects(req.body.consultant);
-        res.json(projects);
+        const consultant = req.query.consultant as string;
+        const projects = await Project.getConsultantProjects(consultant);
+        res.json(Array.isArray(projects) ? projects : []);
     } catch (error) {
         res.status(500).json({ error: "Server error" });
     }
