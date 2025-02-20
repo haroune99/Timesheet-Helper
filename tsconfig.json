@@ -1,0 +1,45 @@
+{
+  "compilerOptions": {
+    /* Language and Environment */
+    "target": "ES2022", // Set the JavaScript version to compile to
+    "lib": ["ES2022"], // Include library definitions for ES2022
+
+    /* Modules */
+    "module": "NodeNext", // Use NodeNext for ES modules
+    "moduleResolution": "NodeNext", // Use Node.js-style module resolution for ES modules
+    "baseUrl": "./", // Base directory for resolving non-relative module names
+    "outDir": "./dist", // Output directory for compiled JavaScript files
+    "rootDir": "./src", // Root directory for TypeScript files
+
+    /* JavaScript Support */
+    "allowJs": true, // Allow importing JavaScript files
+    "checkJs": true, // Enable type-checking for JavaScript files
+
+    /* Emit */
+    "sourceMap": true, // Generate source maps for debugging
+    "declaration": true, // Generate .d.ts declaration files
+    "declarationMap": true, // Generate source maps for declaration files
+
+    /* Interop Constraints */
+    "esModuleInterop": true, // Enable compatibility with ES modules
+    "forceConsistentCasingInFileNames": true, // Ensure consistent casing in file names
+
+    /* Type Checking */
+    "strict": true, // Enable all strict type-checking options
+    "noImplicitAny": true, // Enable error reporting for implicit `any` types
+    "strictNullChecks": true, // Enable strict null checks
+    "strictFunctionTypes": true, // Enable strict function type checking
+    "strictBindCallApply": true, // Enable strict checking of `bind`, `call`, and `apply`
+    "strictPropertyInitialization": true, // Ensure class properties are initialized
+    "noUnusedLocals": true, // Report unused local variables
+    "noUnusedParameters": true, // Report unused function parameters
+    "noImplicitReturns": true, // Report missing return statements
+    "noFallthroughCasesInSwitch": true, // Report fallthrough cases in switch statements
+
+    /* Completeness */
+    "skipLibCheck": true // Skip type-checking of declaration files
+  },
+  "include": ["src/**/*"], // Include all files in the src directory
+  "exclude": ["node_modules"] // Exclude the node_modules directory
+}
+

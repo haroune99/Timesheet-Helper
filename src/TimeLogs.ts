@@ -1,9 +1,15 @@
 import { connectToDatabase } from "./Database";
-import { ObjectId } from "mongodb";
-const client = await connectToDatabase();
+import { MongoClient } from "mongodb";
 import { Project } from "./Project";
 
-interface Timing {
+let client: MongoClient;
+
+async function initializeDB() {
+    client = await connectToDatabase();
+}
+initializeDB();
+
+export interface Timing {
     consultant: string;
     project: string;
     time: number;
@@ -107,7 +113,6 @@ export async function getTimePerProjectperWeek(consultant: string, weekNumber: n
     }));
 }
 
-
 // Helper function to get the week number of a date
 function getWeekNumber(date: Date): number {
     const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
@@ -116,5 +121,3 @@ function getWeekNumber(date: Date): number {
     const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
     return Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1)/7);
 }
-
-

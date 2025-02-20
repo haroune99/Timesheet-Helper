@@ -4,7 +4,8 @@
   "description": "An app to help me manage my time as a consultant",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node -r dotenv/config routes/app.ts"
   },
   "repository": {
     "type": "git",

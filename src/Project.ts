@@ -1,6 +1,12 @@
 import { connectToDatabase } from "./Database";
-import { ObjectId } from "mongodb";
-const client = await connectToDatabase();
+import { ObjectId, Collection, MongoClient } from "mongodb";
+
+let client: MongoClient;
+
+async function initializeDB() {
+    client = await connectToDatabase();
+}
+initializeDB();
 
 export interface Project {
     consultant: string;
@@ -37,12 +43,13 @@ export class Project implements Project {
     }
 
     public static async getConsultantProjects(consultant: string): Promise<Project[]> {
-        const projects = await client.db("TimeSheet").collection<Project>("Projects")
+        const collection = client.db("TimeSheet").collection("Projects") as Collection<Project>;
+        const projects = await collection
             .find({ 
                 consultant: consultant, 
                 team: { $in: [consultant] } 
             })
-            .project<Project>({ // Explicit projection
+            .project({
                 _id: 1,
                 name: 1,
                 consultant: 1,
@@ -55,11 +62,11 @@ export class Project implements Project {
                 team: 1,
                 PM: 1
             })
-            .toArray();
+            .toArray() as unknown as (Project & { _id: ObjectId })[];
     
         return projects.map(p => ({
             ...p,
-            _id: (p._id as unknown as ObjectId).toString() 
+            _id: p._id.toString() 
         }));
     }
 
